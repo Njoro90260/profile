@@ -5,34 +5,35 @@
         include("index.html");
     
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $fname = filter_input(INPUT_POST, "fname", FILTER_SANITIZE_SPECIAL_CHARS);
-        $lname = filter_input(INPUT_POST, "lname", FILTER_SANITIZE_SPECIAL_CHARS);
+        $name = filter_input(INPUT_POST, "person_name", FILTER_SANITIZE_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
-        $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
+        // $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
+        $phonenumber = filter_input(INPUT_POST, "phone_number", FILTER_SANITIZE_NUMBER_INT);
+        $address = filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);
+        // $checkemail = "SELECT * FROM users WHERE email='$email'";
+        // $result = $conn->query($checkemail);
     
-        $checkemail = "SELECT * FROM users WHERE email='$email'";
-        $result = $conn->query($checkemail);
-    
-        if(empty($fname)){
-            echo "please enter first name";
-        }
-        elseif(empty($lname)){
-            echo "please enter lastname";
+        if(empty($name)){
+            echo "please enter name";
         }
         elseif(empty($email)){
             echo "please enter email";
         }
-        elseif(empty($password)){
-            echo "please enter password";
+        elseif(empty($phonenumber)){
+            echo "enter phone number";
         }
-        elseif($result->num_rows>0){
-            echo "That email allready exist!";
+        elseif(empty($address)) {
+            echo "please enter address";
         }
+        // elseif($result->num_rows>0){
+        //     echo "That email allready exist!";
+        // }
         else{
     
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO users (fname, lname, email, password)
-                            VALUES('$fname', '$lname', '$email', '$hash')";
+            // $hash = password_hash($password, PASSWORD_DEFAULT);
+            // $sql = "INSERT INTO profiles (name, email, phone, address, profile_pic)
+            //                 VALUES('$name', '$email', '$phone', '$address', '$profile_pic)";
+            $sql = "INSERT INTO profiles VALUES('$name', '$email', '$phone', '$address', '$profile_pic')";
             if(mysqli_query($conn, $sql)){
                 header("loation: index.php");
             }
