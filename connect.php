@@ -13,3 +13,6 @@ try {
     //throw $th;
     die("connection failed: " . $e->getMessage());
 }
+
+//close the connection
+// $pdo = null;
