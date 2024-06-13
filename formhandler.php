@@ -19,6 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try{
         require_once "connect.php";
+        $hash = password_hash($pwd, PASSWORD_DEFAULT);
+
         $querry = "INSERT INTO profiles (person_name, email, user_password, phone, person_address, profile_pic) VALUES 
         (?, ?, ?, ?, ?, ?);";
         $stmt = $pdo->prepare($querry);
@@ -26,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 //excecute the statement
-     $stmt->execute([$person_name, $email, $pwd, $phone, $address, $imagedata]);
+     $stmt->execute([$person_name, $email, $hash, $phone, $address, $imagedata]);
 
 
         $pdo = null;
