@@ -19,7 +19,7 @@ function checkAndCreateTable($pdo, $table_name)
             user_password varchar(255),
             phone varchar(15),
             person_address text,
-            profile_pic BLOB NOT NULL,
+            profile_pic varchar(255) NOT NULL,
             reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )";
 
