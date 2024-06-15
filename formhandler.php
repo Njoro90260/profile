@@ -2,15 +2,15 @@
 include("index.html");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $person_name = $_POST["person_name"];
-        $email = $_POST["email"];
-        $pwd = $_POST["password"];
-        $phone = $_POST["phone_number"];
-        $address = $_POST["address"];
+        $person_name = filter_input(INPUT_POST, "person_name", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["person_name"];
+        $email =  filter_input(INPUT_POST, "email", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["email"];
+        $pwd =  filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["password"];
+        $phone =  filter_input(INPUT_POST, "phone_number", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["phone_number"];
+        $address =  filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["address"];
         $profile_pic = $_POST["profile_pic"];
     
         //check if file was uploaded
-        if (isset($_FILES['profile_pic']) && $_FILES['image']['error'] == 0) {
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
             // get the image file's binary data
             $imagedata = file_get_contents($_FILES['profile_pic']['tmp_name']);
         } else {
