@@ -1,5 +1,3 @@
 <?php
 include("createtable.php");
-require_once ("formhandler.php");
-
-form();
+include("formhandler.php");

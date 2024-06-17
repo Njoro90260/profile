@@ -1,5 +1,4 @@
 <?php
- function form() {
     require_once "index.html";
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $person_name = $_POST["person_name"];
@@ -43,11 +42,7 @@
     } else {
         header("locaton: index.php");
     }
-}
 
-
-header("Location: profile.php");
-//get email
 function getemail($email) {
 
     return $email;
