@@ -15,8 +15,8 @@
         <?php
 include("connect.php");
 $table_name = "profiles";
-
-$email = "sharlom@gmail.com";
+require_once("formhandler.php");
+$email = $person->getemail($email);
 $selectdata = "SELECT id, person_name, email, profile_pic, reg_date FROM  profiles WHERE email = :email;";
 $results = $pdo ->prepare($selectdata);
 $results -> execute(['email' => $email]);
