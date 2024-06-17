@@ -1,22 +1,46 @@
 <?php
 include("index.html");
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $person_name = filter_input(INPUT_POST, "person_name", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["person_name"];
-        $email =  filter_input(INPUT_POST, "email", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["email"];
-        $pwd =  filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["password"];
-        $phone =  filter_input(INPUT_POST, "phone_number", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["phone_number"];
-        $address =  filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["address"];
-        $profile_pic = $_POST["profile_pic"];
-    
-        //check if file was uploaded
-        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
-            // get the image file's binary data
-            $imagedata = file_get_contents($_FILES['profile_pic']['tmp_name']);
-        } else {
-            echo "failed to upload image";
+class Person {
+    public $person_name;
+    public $email;
+    public $pwd;
+    public $phone;
+    public $address;
+    public $profile_pic;
+
+    public function __construct(){
+        $this->person_name = $name;
+        $this->email = $email;
+        $this->pwd = $pwd;
+        $this->phone = $phone;
+        $this->address = $address;
+        $this->profile_pic = $profile_pic;
+    }
+    public function get_user_data() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $person_name = filter_input(INPUT_POST, "person_name", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["person_name"];
+            $email =  filter_input(INPUT_POST, "email", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["email"];
+            $pwd =  filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["password"];
+            $phone =  filter_input(INPUT_POST, "phone_number", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["phone_number"];
+            $address =  filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);//$_POST["address"];
+            $profile_pic = $_POST["profile_pic"];
+        
+            //check if file was uploaded
+            if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
+                // get the image file's binary data
+                $imagedata = file_get_contents($_FILES['profile_pic']['tmp_name']);
+            } else {
+                echo "failed to upload image";
+            } 
         }
-    
+            else
+            {
+                header("locaton: index.php");
+            }
+             
+    }
+    public function insert_into_database() {
         try{
             require_once "connect.php";
             $hash = password_hash($pwd, PASSWORD_DEFAULT);
@@ -40,13 +64,13 @@ include("index.html");
         } catch (PDOException $e) {
             die("Querry failed: " . $e->getMessage());
         }
-    } else {
-        header("locaton: index.php");
     }
-
-
-//get email
-function getemail($email) {
-    $email = $_POST["email"];
-    return $email;
+    //get email
+    function getemail($email) {
+        $email = $_POST["email"];
+        return $email;
+    }
 }
+$object = new Person()
+    
+
