@@ -33,7 +33,6 @@ function checkAndCreateTable($pdo, $table_name)
     }
 }
 $table_name = "profiles";
-
  // Call the function
  checkAndCreateTable($pdo, $table_name);
 //close connection
