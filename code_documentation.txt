@@ -1,0 +1,7 @@
+HOW TO RUN THIS CODE:
+
+clone this repository: git clone <repository url> website
+- import the database file (website.sql) through php myadmin.
+-if you are using xampp, run localhost/website/index.php
+
+.....this is just a simple code for php connection to mysql database.....
