@@ -1,55 +1,56 @@
 <?php
-require_once "index.html";
-
 session_start();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $person_name = $_POST["person_name"];
     $email = $_POST["email"];
     $pwd = $_POST["password"];
     $phone = $_POST["phone_number"];
     $address = $_POST["address"];
-    $profile_pic = $_POST["profile_pic"];
+    $profile_pic = null;
 
-    //check if file was uploaded
-    if (isset($_FILES['profile_pic']) && $_FILES['image']['error'] == 0) {
-        // get the image file's binary data
-        $imagedata = file_get_contents($_FILES['profile_pic']['tmp_name']);
+    // Check if a file was uploaded
+    if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
+        // Get the image file's binary data
+        $profile_pic = file_get_contents($_FILES['profile_pic']['tmp_name']);
     } else {
-        echo "failed to upload image";
+        echo "Failed to upload image";
+        exit();
     }
 
     try {
         require_once "connect.php";
         $hash = password_hash($pwd, PASSWORD_DEFAULT);
 
-        $querry = "INSERT INTO profiles (person_name, email, user_password, phone, person_address, profile_pic) VALUES 
-            (?, ?, ?, ?, ?, ?);";
-        $stmt = $pdo->prepare($querry);
-        // $stmt->bindparam(":profile_pic", $imagedata PDO::PARAM_LOB);
+        $query = "INSERT INTO profiles (person_name, email, user_password, phone, person_address, profile_pic) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($query);
 
+        // Execute the statement
+        $stmt->execute([$person_name, $email, $hash, $phone, $address, $profile_pic]);
 
-        //excecute the statement
-        $stmt->execute([$person_name, $email, $hash, $phone, $address, $imagedata]);
+        // Get the last inserted ID to pass it to profile.php
+        $last_id = $pdo->lastInsertId();
 
-
+        // Close the database connection
         $pdo = null;
         $stmt = null;
 
-        header("Location: profile.php");
-
-        die();
+        // Redirect to profile.php with the user ID
+        header("Location: profile.php?id=" . $last_id);
+        exit();
     } catch (PDOException $e) {
-        die("Querry failed: " . $e->getMessage());
+        die("Query failed: " . $e->getMessage());
     }
-
 } else {
-    header("locaton: index.php");
+    // Redirect to index.html if accessed directly
+    header("Location: index.html");
+    exit();
 }
 
-function getEmailFromPost()
-{
+function getEmailFromPost() {
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["email"])) {
         return $_POST["email"];
     }
     return null;
 }
+

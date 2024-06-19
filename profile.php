@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
-    <link rel="stylesheet" href="styles.css" class="">
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <h1>HELLO THERE!</h1>
     <div class="profile">
@@ -13,32 +15,51 @@
         <p>Your details are: </p> <br>
 
         <?php
-include("connect.php");
-$table_name = "profiles";
-$email = "wchegesalome@gmail.com";
-$selectdata = "SELECT id, person_name, email, profile_pic, reg_date FROM  profiles WHERE email = :email;";
-$results = $pdo ->prepare($selectdata);
-$results -> execute(['email' => $email]);
+        require_once "connect.php";
 
-if($results->rowCount() > 0 ) {
-    while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
-        // $profile_pic = 'data:' .htmlspecialchars($row["profile_pic_mime"]) . ';base64,' . base64_encode($row["profile_pic"]);
-        $profile_pic = htmlspecialchars($row["profile_pic"]);
-        echo "<tr>
-        <td><img src=' " . $profile_pic . " ' alt='profile picture'> <br><br><br></td> </tr>
-        <tr> <td>" . htmlspecialchars($row["id"]). "</td> <br> <br><br></tr>
-       <tr> <td>Name: " . htmlspecialchars($row["person_name"]). "</td> <br> <br><br></tr>
-        <tr> <td>Email: " . htmlspecialchars($row["email"]). "</td><br><br><br> </tr>
-        <tr> <td>Day you registered: " . htmlspecialchars($row["reg_date"]). " <td> <br><br><br> 
-      </tr>";
-    }
-echo "</table>";
+        // Check if ID is passed in the URL
+        if (isset($_GET['id'])) {
+            $user_id = $_GET['id'];
 
-} else {
-    echo "No results found";
-}
-?>
+            try {
+                // Prepare the SQL query to fetch user data
+                $query = "SELECT id, person_name, email, phone, person_address, profile_pic, reg_date FROM profiles WHERE id = ?";
+                $stmt = $pdo->prepare($query);
+
+                // Execute the statement with the user ID
+                $stmt->execute([$user_id]);
+
+                // Fetch the user data
+                $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($user_data) {
+                    echo "<p><strong>ID:</strong> " . htmlspecialchars($user_data["id"]) . "</p>";
+                    echo "<p><strong>Name:</strong> " . htmlspecialchars($user_data["person_name"]) . "</p>";
+                    echo "<p><strong>Email:</strong> " . htmlspecialchars($user_data["email"]) . "</p>";
+                    echo "<p><strong>Phone:</strong> " . htmlspecialchars($user_data["phone"]) . "</p>";
+                    echo "<p><strong>Address:</strong> " . htmlspecialchars($user_data["person_address"]) . "</p>";
+                    echo "<p><strong>Day you registered:</strong> " . htmlspecialchars($user_data["reg_date"]) . "</p>";
+
+                    if ($user_data["profile_pic"]) {
+                        echo "<p><strong>Profile Picture:</strong></p>";
+                        echo '<img src="data:image/jpeg;base64,' . base64_encode($user_data["profile_pic"]) . '" alt="Profile Picture">';
+                    }
+                } else {
+                    echo "<p>No user found with ID " . htmlspecialchars($user_id) . ".</p>";
+                }
+
+                // Close the database connection
+                $pdo = null;
+                $stmt = null;
+            } catch (PDOException $e) {
+                die("Query failed: " . $e->getMessage());
+            }
+        } else {
+            echo "<p>No user ID provided.</p>";
+        }
+        ?>
 
     </div>
 </body>
+
 </html>
