@@ -33,6 +33,12 @@
                 $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($user_data) {
+                    if ($user_data["profile_pic"]) {
+                        echo '<img src="data:image/jpeg;base64,' . base64_encode($user_data["profile_pic"]) . '" alt="Profile Picture">';
+                    }
+                } else {
+                    echo "<p>No user found with ID " . htmlspecialchars($user_id) . ".</p>";
+                }
                     echo "<p><strong>ID:</strong> " . htmlspecialchars($user_data["id"]) . "</p>";
                     echo "<p><strong>Name:</strong> " . htmlspecialchars($user_data["person_name"]) . "</p>";
                     echo "<p><strong>Email:</strong> " . htmlspecialchars($user_data["email"]) . "</p>";
@@ -40,13 +46,7 @@
                     echo "<p><strong>Address:</strong> " . htmlspecialchars($user_data["person_address"]) . "</p>";
                     echo "<p><strong>Day you registered:</strong> " . htmlspecialchars($user_data["reg_date"]) . "</p>";
 
-                    if ($user_data["profile_pic"]) {
-                        echo "<p><strong>Profile Picture:</strong></p>";
-                        echo '<img src="data:image/jpeg;base64,' . base64_encode($user_data["profile_pic"]) . '" alt="Profile Picture">';
-                    }
-                } else {
-                    echo "<p>No user found with ID " . htmlspecialchars($user_id) . ".</p>";
-                }
+            
 
                 // Close the database connection
                 $pdo = null;
